@@ -1,0 +1,271 @@
+### Variables
+@base = http://localhost:3000
+@token = REPLACE_WITH_ACCESS_TOKEN
+@workId = REPLACE_WITH_WORK_ID
+@memberId = REPLACE_WITH_MEMBER_ID
+@categoryId = REPLACE_WITH_CATEGORY_ID
+@authorshipId = REPLACE_WITH_AUTHORSHIP_ID
+@anonId = 550e8400-e29b-41d4-a716-446655440000
+
+# ─────────────────────────────────────────
+# AUTH
+# ─────────────────────────────────────────
+
+### Login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@lab.edu",
+  "password": "CHANGE_ME_strong_password"
+}
+
+### Refresh access token (uses httpOnly cookie automatically in browser)
+POST {{base}}/auth/refresh
+
+### Logout
+POST {{base}}/auth/logout
+
+### Get current user
+GET {{base}}/auth/me
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# USERS (admin only)
+# ─────────────────────────────────────────
+
+### Create user (editor)
+POST {{base}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "editor@lab.edu",
+  "password": "strong-editor-password",
+  "accessLevel": "editor"
+}
+
+### List all users
+GET {{base}}/users
+Authorization: Bearer {{token}}
+
+### Get user by ID
+GET {{base}}/users/{{memberId}}
+Authorization: Bearer {{token}}
+
+### Update user
+PATCH {{base}}/users/{{memberId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accessLevel": "editor"
+}
+
+### Delete user
+DELETE {{base}}/users/{{memberId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# MEMBERS
+# ─────────────────────────────────────────
+
+### Create member (admin)
+POST {{base}}/members
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Dr. Sarah Khalil",
+  "role": "professor",
+  "status": "active",
+  "biography": "Structural engineering specialist with 15 years of research experience.",
+  "joinedDate": "2010-09-01",
+  "socialLinks": {
+    "email": "s.khalil@university.edu",
+    "googleScholar": "https://scholar.google.com/citations?user=example"
+  }
+}
+
+### List members
+GET {{base}}/members
+
+### List members with filters
+GET {{base}}/members?role=professor&status=active
+
+### Search members
+GET {{base}}/members?search=Khalil
+
+### Get member by ID (with authored works)
+GET {{base}}/members/{{memberId}}
+
+### Update member
+PATCH {{base}}/members/{{memberId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "biography": "Updated biography text."
+}
+
+### Soft-delete member (sets status=alumni)
+DELETE {{base}}/members/{{memberId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# CATEGORIES (admin only for mutations)
+# ─────────────────────────────────────────
+
+### Create category
+POST {{base}}/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Structural Engineering",
+  "domain": "structural",
+  "description": "Research on load-bearing systems, frames, and materials."
+}
+
+### List categories
+GET {{base}}/categories
+
+### Update category
+PATCH {{base}}/categories/{{categoryId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "description": "Updated description."
+}
+
+### Delete category (fails if works reference it)
+DELETE {{base}}/categories/{{categoryId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# WORKS
+# ─────────────────────────────────────────
+
+### Create work (editor+)
+POST {{base}}/works
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Nonlinear Seismic Analysis of RC Frames",
+  "type": "paper",
+  "categoryId": "{{categoryId}}",
+  "description": "This paper investigates nonlinear response of reinforced concrete frames under seismic loading.",
+  "status": "published",
+  "completionDate": "2024-03-15",
+  "featured": true
+}
+
+### List works (public)
+GET {{base}}/works
+
+### List works with filters
+GET {{base}}/works?type=paper&status=published&featured=true
+
+### Search works
+GET {{base}}/works?search=seismic
+
+### List works by author
+GET {{base}}/works?authorId={{memberId}}
+
+### Get work by ID (fully populated)
+GET {{base}}/works/{{workId}}
+
+### Update work
+PATCH {{base}}/works/{{workId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "featured": true,
+  "status": "published"
+}
+
+### Soft-delete work (sets status=archived)
+DELETE {{base}}/works/{{workId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# AUTHORSHIP
+# ─────────────────────────────────────────
+
+### Add author to work
+POST {{base}}/works/{{workId}}/authors
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "memberId": "{{memberId}}",
+  "order": 1,
+  "role": "first",
+  "contribution": "Conceptualization, formal analysis, writing – original draft."
+}
+
+### Update authorship
+PATCH {{base}}/works/{{workId}}/authors/{{authorshipId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "role": "corresponding",
+  "order": 1
+}
+
+### Reorder authors (transactional)
+PUT {{base}}/works/{{workId}}/authors/order
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "items": [
+    { "authorshipId": "{{authorshipId}}", "order": 1 }
+  ]
+}
+
+### Remove author from work
+DELETE {{base}}/works/{{workId}}/authors/{{authorshipId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# UPLOADS (multipart — use curl or Postman)
+# ─────────────────────────────────────────
+
+### Upload file (use Postman/curl: multipart/form-data with field 'file')
+# curl -X POST http://localhost:3000/uploads \
+#   -H "Authorization: Bearer $TOKEN" \
+#   -F "file=@paper.pdf;type=application/pdf" \
+#   -F "workId={{workId}}" \
+#   -F "kind=pdf" \
+#   -F "caption=Full paper PDF"
+
+### List attachments for a work
+GET {{base}}/uploads/work/{{workId}}
+Authorization: Bearer {{token}}
+
+### Delete attachment
+DELETE {{base}}/uploads/{{authorshipId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────
+# LIKES (public — no auth required)
+# ─────────────────────────────────────────
+
+### Like a work (idempotent)
+POST {{base}}/works/{{workId}}/likes
+Content-Type: application/json
+
+{
+  "anonymousId": "{{anonId}}"
+}
+
+### Get like count
+GET {{base}}/works/{{workId}}/likes/count
+
+### Unlike a work
+DELETE {{base}}/works/{{workId}}/likes/{{anonId}}
