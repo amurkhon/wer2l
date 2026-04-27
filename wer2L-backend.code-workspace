@@ -4,8 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "../../Bookle"
+			"path": "../wer2L-temp"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"js/ts.tsdk.path": "wer2L-backend/node_modules/typescript/lib"
+	}
 }

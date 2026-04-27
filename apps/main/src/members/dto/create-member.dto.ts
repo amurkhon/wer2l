@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -12,22 +12,27 @@ import {
 class SocialLinksDto {
   @IsEmail()
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   email?: string;
 
   @IsUrl()
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   linkedin?: string;
 
   @IsUrl()
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   googleScholar?: string;
 
   @IsUrl()
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   orcid?: string;
 
   @IsUrl()
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   personalSite?: string;
 }
 
