@@ -48,9 +48,9 @@ export class LikesService {
   }
 
   /** Returns the like count for a work from the denormalized Work.likeCount field. */
-  async getCount(workId: string): Promise<{ workId: string; likeCount: number }> {
+  async getCount(workId: string): Promise<{ count: number }> {
     const work = await this.workModel.findById(workId).select('likeCount').lean<WorkDocument>();
     if (!work) throw new NotFoundException(`Work ${workId} not found`);
-    return { workId, likeCount: work.likeCount };
+    return { count: work.likeCount };
   }
 }

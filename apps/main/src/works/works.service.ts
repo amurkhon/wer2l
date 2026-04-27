@@ -115,6 +115,12 @@ export class WorksService {
       this.attachmentModel.find({ workId: work._id }).lean<AttachmentDocument[]>(),
     ]);
 
-    return { ...(work as unknown as Record<string, unknown>), authors, attachments };
+    const { categoryId, ...workRest } = work as unknown as Record<string, unknown>;
+
+    const mappedAuthors = (authors as unknown as Record<string, unknown>[]).map(
+      ({ memberId, ...rest }) => ({ ...rest, member: memberId }),
+    );
+
+    return { ...workRest, category: categoryId, authors: mappedAuthors, attachments };
   }
 }
