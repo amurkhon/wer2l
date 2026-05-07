@@ -11,7 +11,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./apps",
-    "baseUrl": "./",
+
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -22,7 +22,7 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "paths": {
-      "@app/*": ["apps/main/src/*"]
+      "@app/*": ["./apps/main/src/*"]
     }
   }
 }

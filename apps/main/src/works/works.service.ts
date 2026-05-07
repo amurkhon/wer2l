@@ -17,7 +17,7 @@ export interface WorkListQuery {
 }
 
 export interface PopulatedWork extends Record<string, unknown> {
-  authors: AuthorshipDocument[];
+  authors: Record<string, unknown>[];
   attachments: AttachmentDocument[];
 }
 
