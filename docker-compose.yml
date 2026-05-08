@@ -23,9 +23,5 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
     volumes:
       - uploads_data:/app/uploads
-    depends_on:
-      mongodb:
-        condition: service_healthy
 volumes:
-  mongo_data:
   uploads_data:
