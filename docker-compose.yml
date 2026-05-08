@@ -1,10 +1,10 @@
 services:
   app:
-    container_name: main-api
+    container_name: main
     restart: always
     image: node:20.10.0
     ports:
-      - 4005:4006
+      - 4005:4005
     volumes:
       - uploads_data:/app/uploads
 
@@ -15,11 +15,11 @@ services:
     command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod"
   
   wer2l:
-    container_name: wer2l-api
+    container_name: wer2l
     restart: unless-stopped
     image: node:20.10.0
     ports:
-      - 4005:4007
+      - 4006:4006
     volumes:
       - uploads_data:/app/uploads
 
@@ -32,3 +32,6 @@ services:
 networks:
   monorepo-network:
     driver: bridge
+
+volumes:
+  uploads_data:
