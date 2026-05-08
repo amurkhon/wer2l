@@ -1,6 +1,5 @@
 services:
   app:
-    main:
     container_name: main-api
     restart: always
     image: node:20.10.0
