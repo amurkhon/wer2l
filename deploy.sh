@@ -1,6 +1,10 @@
 #!/bin/bash
-set -e
 
-docker compose down --remove-orphans
-docker compose up --build -d
-docker compose logs -f app
+
+# PRODUCTION
+
+git reset --hard
+git checkout master
+git pull origin master
+
+docker compose up -d
