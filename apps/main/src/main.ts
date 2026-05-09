@@ -12,8 +12,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT', 4000);
-  const corsOrigin = configService.get<string>('CORS_ORIGIN', 'http://localhost:3000');
+  const port = configService.get<number>('PORT', 4005);
+  const corsOrigin = configService.get<string>('CORS_ORIGIN', 'http://localhost:4006');
   const cookieSecret = configService.getOrThrow<string>('COOKIE_SECRET');
 
   app.use(helmet());
