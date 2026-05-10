@@ -2,36 +2,23 @@ services:
   app:
     container_name: main
     restart: always
-    image: node:20.10.0
+    image: node:22
     ports:
       - 4005:4005
+    env_file:
+      - .env
     volumes:
-      - uploads_data:/app/uploads
-
+      - ./:/usr/src/lab-ims-backend
+      - /usr/src/lab-ims-backend/node_modules
+      - uploads_data:/usr/src/lab-ims-backend/uploads
+    working_dir: /usr/src/lab-ims-backend
     networks:
-      - monorepo-network
-    
-    #FOR PRODUCTION
-    command: bash -c "rm -rf dist && npm install && npm run build && npm run start:prod"
-  
-  wer2l:
-    container_name: wer2l
-    restart: unless-stopped
-    image: node:20.10.0
-    ports:
-      - 4006:4006
-    volumes:
-      - uploads_data:/app/uploads
-
-    networks:
-      - monorepo-network
-    
-    #FOR PRODUCTION
-    command: bash -c "npm install && npm run build && npm run start:prod:batch"
+      - lab-ims-net
+    command: bash -c "npm install && rm -rf dist && npm run build && npm run start:prod"
 
 networks:
-  monorepo-network:
-    driver: bridge
+  lab-ims-net:
+    external: true
 
 volumes:
   uploads_data:
