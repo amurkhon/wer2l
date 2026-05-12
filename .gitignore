@@ -8,8 +8,8 @@ dist/
 .env.*.local
 .env.example
 
-# Uploads (local dev files)
-uploads/
+# Uploads (local dev files only, not source code)
+/uploads/
 
 # IDE
 .idea/
