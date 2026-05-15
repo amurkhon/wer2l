@@ -7,6 +7,7 @@ import { AuthorshipModule } from './authorship/authorship.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ConfigModule } from './config/config.module';
 import { LikesModule } from './likes/likes.module';
+import { HighlightsModule } from './highlights/highlights.module';
 import { MembersModule } from './members/members.module';
 import { SeedService } from './seeds/seed.service';
 import { UploadsModule } from './uploads/uploads.module';
@@ -35,6 +36,7 @@ import { WorksModule } from './works/works.module';
     AuthorshipModule,
     UploadsModule,
     LikesModule,
+    HighlightsModule,
   ],
   providers: [SeedService],
 })
