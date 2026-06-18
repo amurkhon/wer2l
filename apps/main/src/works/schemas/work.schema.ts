@@ -11,8 +11,11 @@ export class Work {
   @Prop({ required: true, enum: ['paper', 'project', 'patent', 'thesis'] })
   type: 'paper' | 'project' | 'patent' | 'thesis';
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Category', index: true })
-  categoryId: Types.ObjectId;
+  @Prop({ required: false, type: Types.ObjectId, ref: 'Category', index: true })
+  categoryId?: Types.ObjectId;
+
+  @Prop()
+  paperUrl?: string;
 
   @Prop()
   description?: string;

@@ -33,7 +33,7 @@ export class WorksService {
   async create(dto: CreateWorkDto): Promise<WorkDocument> {
     return this.workModel.create({
       ...dto,
-      categoryId: new Types.ObjectId(dto.categoryId),
+      categoryId: dto.categoryId ? new Types.ObjectId(dto.categoryId) : undefined,
     });
   }
 

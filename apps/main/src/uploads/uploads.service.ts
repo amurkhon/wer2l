@@ -61,8 +61,7 @@ export class UploadsService {
    * Used for profile photos and cover images — no Attachment record is created.
    */
   async storeImage(file: Express.Multer.File): Promise<{ fileUrl: string }> {
-    const allowed = ALLOWED_MIME_TYPES['image'];
-    if (!allowed.includes(file.mimetype)) {
+    if (!file.mimetype.startsWith('image/')) {
       throw new BadRequestException(
         `Only image files are allowed. Received: ${file.mimetype}`,
       );

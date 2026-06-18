@@ -9,7 +9,12 @@ export class CreateWorkDto {
   type: 'paper' | 'project' | 'patent' | 'thesis';
 
   @IsMongoId()
-  categoryId: string;
+  @IsOptional()
+  categoryId?: string;
+
+  @IsString()
+  @IsOptional()
+  paperUrl?: string;
 
   @IsString()
   @IsOptional()
