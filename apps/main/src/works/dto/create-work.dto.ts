@@ -1,5 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsDate, IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsEnum,
+  IsMongoId,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class CreateWorkDto {
   @IsString()
@@ -15,6 +23,13 @@ export class CreateWorkDto {
   @IsString()
   @IsOptional()
   paperUrl?: string;
+
+  /** Path returned by POST /uploads/pdf, or '' to remove the PDF. */
+  @Matches(/^(\/uploads\/[\w/-]+\.pdf)?$/i, {
+    message: 'pdfFile must be a PDF path returned by /uploads/pdf',
+  })
+  @IsOptional()
+  pdfFile?: string;
 
   @IsString()
   @IsOptional()

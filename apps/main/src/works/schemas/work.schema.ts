@@ -17,6 +17,10 @@ export class Work {
   @Prop()
   paperUrl?: string;
 
+  /** Uploaded PDF of the work, served from /uploads. */
+  @Prop()
+  pdfFile?: string;
+
   @Prop()
   description?: string;
 

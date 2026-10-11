@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import * as path from 'path';
 import { Attachment, AttachmentDocument } from './schemas/attachment.schema';
 import { STORAGE_SERVICE, StorageService } from './storage/storage.interface';
 import { CreateAttachmentDto } from './dto/create-attachment.dto';
@@ -68,6 +69,23 @@ export class UploadsService {
     }
     const { fileUrl } = await this.storageService.store(file);
     return { fileUrl };
+  }
+
+  /**
+   * Stores a PDF file and returns its URL.
+   * Used for a work's downloadable paper — no Attachment record is created.
+   * Checks the file signature and extension rather than the client-supplied MIME type,
+   * since the static server picks the Content-Type from the extension.
+   */
+  async storePdf(file: Express.Multer.File): Promise<{ fileUrl: string; sizeBytes: number }> {
+    if (!file) throw new BadRequestException('No file uploaded.');
+    const isPdf =
+      path.extname(file.originalname).toLowerCase() === '.pdf' &&
+      file.buffer.subarray(0, 5).toString('latin1') === '%PDF-';
+    if (!isPdf) {
+      throw new BadRequestException('Only PDF files are allowed.');
+    }
+    return this.storageService.store(file);
   }
 
   /** Lists all attachments for a given work. */

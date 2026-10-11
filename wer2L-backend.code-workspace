@@ -6,5 +6,8 @@
 		{
 			"path": "../wer2L-temp"
 		}
-	]
+	],
+	"settings": {
+		"js/ts.tsdk.path": "node_modules/typescript/lib"
+	}
 }

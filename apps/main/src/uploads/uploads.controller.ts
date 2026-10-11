@@ -34,6 +34,12 @@ export class UploadsController {
     return this.uploadsService.storeImage(file);
   }
 
+  @Post('pdf')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadPdf(@UploadedFile() file: Express.Multer.File) {
+    return this.uploadsService.storePdf(file);
+  }
+
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   upload(
