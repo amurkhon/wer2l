@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -43,10 +43,15 @@ export class CreateWorkDto {
   @IsOptional()
   status?: 'in_progress' | 'published' | 'archived';
 
+  /**
+   * The admin form sends '' when the date is blank; null stores/clears it instead of failing IsDate.
+   * @Type runs before @Transform, so check the raw input rather than the already-converted value.
+   */
   @IsDate()
   @Type(() => Date)
+  @Transform(({ obj, key, value }) => (obj[key] === '' ? null : value))
   @IsOptional()
-  completionDate?: Date;
+  completionDate?: Date | null;
 
   @IsBoolean()
   @IsOptional()

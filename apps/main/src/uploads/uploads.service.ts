@@ -20,6 +20,9 @@ const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   video: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'],
 };
 
+/** Upper bound for a work's paper PDF (POST /uploads/pdf). */
+export const PDF_MAX_BYTES = 50 * 1024 * 1024;
+
 @Injectable()
 export class UploadsService {
   constructor(

@@ -20,7 +20,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 import { UserDocument } from '../users/schemas/user.schema';
 import { CreateAttachmentDto } from './dto/create-attachment.dto';
-import { UploadsService } from './uploads.service';
+import { PDF_MAX_BYTES, UploadsService } from './uploads.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('admin', 'editor')
@@ -34,8 +34,9 @@ export class UploadsController {
     return this.uploadsService.storeImage(file);
   }
 
+  /** Papers routinely exceed UPLOAD_MAX_BYTES, so this route overrides the module-wide limit. */
   @Post('pdf')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: PDF_MAX_BYTES } }))
   uploadPdf(@UploadedFile() file: Express.Multer.File) {
     return this.uploadsService.storePdf(file);
   }
